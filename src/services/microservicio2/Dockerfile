@@ -5,13 +5,15 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copiar package.json y package-lock.json
-COPY package*.json ./
+COPY src/services/microservicio2/package*.json ./
 
 # Instalar dependencias
 RUN npm install --omit=dev
 
 # Copiar el código de la aplicación
-COPY . .
+COPY src/services/microservicio2/ ./
+
+COPY src/libs ../libs
 
 # Exponer el puerto
 EXPOSE 3002

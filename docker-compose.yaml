@@ -7,11 +7,68 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: primos_db
     ports:
-      - "5432:5432"
+      - "5431:5432"
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
   cola:
     image: redis:alpine
     container_name: mi_redis
     ports:
       - "6379:6379"
+
+  micro1:
+    build:
+      context: .
+      dockerfile: src/services/microservicio1/Dockerfile         # opcional si se llama Dockerfile
+    container_name: microservicio1
+    depends_on:
+      - db
+      - cola
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: usuario
+      DB_PASS: password
+      DB_NAME: primos_db
+      REDIS_HOST: cola
+      REDIS_PORT: 6379
+    ports:
+      - "3001:3001"
+
+  micro2:
+    build:
+      context: .     
+      dockerfile: src/services/microservicio2/Dockerfile                    # opcional si se llama Dockerfile
+    container_name: microservicio2
+    depends_on:
+      - db
+      - cola
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: usuario
+      DB_PASS: password
+      DB_NAME: primos_db
+      REDIS_HOST: cola
+      REDIS_PORT: 6379
+    ports:
+      - "3002:3002"
+
+  micro3:
+    build:
+      context: .       # carpeta donde está tu Dockerfile
+      dockerfile: src/services/microservicio3/Dockerfile                    # opcional si se llama Dockerfile
+    container_name: microservicio3
+    depends_on:
+      - db
+      - cola
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: usuario
+      DB_PASS: password
+      DB_NAME: primos_db
+      REDIS_HOST: cola
+      REDIS_PORT: 6379
+    ports:
+      - "3003:3003"

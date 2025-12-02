@@ -5,16 +5,18 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copiar package.json y package-lock.json
-COPY package*.json ./
+COPY src/services/microservicio1/package*.json ./
 
 # Instalar dependencias
 RUN npm install --omit=dev
 
 # Copiar el código de la aplicación
-COPY . .
+COPY src/services/microservicio1/ ./
+
+COPY src/libs ../libs
 
 # Exponer el puerto
-EXPOSE 3003
+EXPOSE 3001
 
 # Comando para ejecutar la app
-CMD ["node", "resultado.js"]
+CMD ["node", "nuevo.js"]
