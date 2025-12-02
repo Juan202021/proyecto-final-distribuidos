@@ -1,24 +1,24 @@
-# 🐳 Guía de Docker Hub - Sistema de Números Primos Distribuidos
+#  Guía de Docker Hub - Sistema de Números Primos Distribuidos
 
 Esta guía te ayudará a **subir las imágenes a Docker Hub** (si eres el que construye) o **usar las imágenes** (si solo vas a probar).
 
 ---
 
-## 👥 ¿Qué rol tienes?
+##  ¿Qué rol tienes?
 
-### 🔨 Rol 1: Construir y Subir Imágenes (Solo 1 persona)
+###  Rol 1: Construir y Subir Imágenes (Solo 1 persona)
 
 **Si eres la persona que subirá las imágenes por primera vez**, sigue la **Sección A**.
 
-### 🧪 Rol 2: Probar el Sistema
+###  Rol 2: Probar el Sistema
 
 **Si solo vas a probar el sistema** con las imágenes que ya están en Docker Hub, ve directo a la **Sección C**.
 
 ---
 
-## 📦 SECCIÓN A: Subir Imágenes a Docker Hub (Primera vez)
+##  SECCIÓN A: Subir Imágenes a Docker Hub (Primera vez)
 
-### Prerrequisitos ✅
+### Prerrequisitos 
 
 - [ ] Docker instalado y corriendo
 - [ ] Cuenta en Docker Hub (gratis)
@@ -45,7 +45,7 @@ Te pedirá:
 - **Username:** `jemartinez02` (o tu usuario)
 - **Password:** tu contraseña de Docker Hub
 
-✅ Deberías ver: `Login Succeeded`
+ Deberías ver: `Login Succeeded`
 
 ---
 
@@ -61,39 +61,39 @@ chmod +x build-and-push.sh
 ```
 
 **¿Qué hace el script?**
-1. ✅ Login a Docker Hub
-2. ✅ Construye las 4 imágenes (micro1, micro2, micro3, worker)
-3. ✅ Las sube a tu cuenta
-4. ✅ Muestra los enlaces
+1.  Login a Docker Hub
+2.  Construye las 4 imágenes (micro1, micro2, micro3, worker)
+3.  Las sube a tu cuenta
+4.  Muestra los enlaces
 
 **Tiempo aproximado:** 5-10 minutos (depende de tu internet)
 
 **Salida esperada:**
 
 ```
-🐳 Construyendo y subiendo imágenes a Docker Hub
+ Construyendo y subiendo imágenes a Docker Hub
 Usuario: jemartinez02
 
-🔐 Iniciando sesión en Docker Hub...
+ Iniciando sesión en Docker Hub...
 Login Succeeded
 
-📦 [1/4] Construyendo microservicio1...
-⬆️  Subiendo microservicio1...
-✓ microservicio1 subido
+ [1/4] Construyendo microservicio1...
+  Subiendo microservicio1...
+  microservicio1 subido
 
-📦 [2/4] Construyendo microservicio2...
-⬆️  Subiendo microservicio2...
-✓ microservicio2 subido
+ [2/4] Construyendo microservicio2...
+  Subiendo microservicio2...
+  microservicio2 subido
 
-📦 [3/4] Construyendo microservicio3...
-⬆️  Subiendo microservicio3...
-✓ microservicio3 subido
+ [3/4] Construyendo microservicio3...
+  Subiendo microservicio3...
+  microservicio3 subido
 
-📦 [4/4] Construyendo worker...
-⬆️  Subiendo worker...
-✓ worker subido
+ [4/4] Construyendo worker...
+  Subiendo worker...
+  worker subido
 
-✅ ¡Todas las imágenes fueron construidas y subidas exitosamente!
+ ¡Todas las imágenes fueron construidas y subidas exitosamente!
 ```
 
 ---
@@ -126,12 +126,12 @@ docker push jemartinez02/worker:latest
 
 1. Ve a: https://hub.docker.com/repositories/jemartinez02
 2. Deberías ver 4 repositorios públicos:
-   - ✅ `jemartinez02/microservicio1`
-   - ✅ `jemartinez02/microservicio2`
-   - ✅ `jemartinez02/microservicio3`
-   - ✅ `jemartinez02/worker`
+   -  `jemartinez02/microservicio1`
+   -  `jemartinez02/microservicio2`
+   -  `jemartinez02/microservicio3`
+   -  `jemartinez02/worker`
 
-**🎉 ¡Listo! Las imágenes están públicas y listas para usar.**
+** ¡Listo! Las imágenes están públicas y listas para usar.**
 
 ---
 
@@ -147,7 +147,7 @@ Ahora tu compañero puede clonar el repo y usar las imágenes.
 
 ---
 
-## 🧪 SECCIÓN B: Probar Localmente (Antes de Kubernetes)
+## SECCIÓN B: Probar Localmente (Antes de Kubernetes)
 
 ### Verificar que las imágenes funcionan con Docker Compose
 
@@ -165,11 +165,11 @@ curl -X POST http://localhost:3001/nuevo \
   -d '{"cantidad": 5, "digitos": 8}'
 ```
 
-Si funciona, ¡las imágenes están bien! ✅
+Si funciona, ¡las imágenes están bien! 
 
 ---
 
-## 🚀 SECCIÓN C: Usar las Imágenes en Kubernetes (Para tu compañero)
+## SECCIÓN C: Usar las Imágenes en Kubernetes (Para tu compañero)
 
 ### Para el compañero/a que va a probar en Killercoda
 
@@ -191,9 +191,9 @@ chmod +x deploy.sh
 ```
 
 Kubernetes automáticamente:
-- ✅ Descarga las imágenes de Docker Hub
-- ✅ Despliega todo el sistema
-- ✅ Levanta 13 pods
+-  Descarga las imágenes de Docker Hub
+-  Despliega todo el sistema
+-  Levanta 13 pods
 
 **Tiempo:** 2-3 minutos
 
@@ -228,9 +228,9 @@ Deberías ver los 5 workers procesando en paralelo.
 
 ---
 
-## 🆘 Troubleshooting
+## Troubleshooting
 
-### ❌ Error: "denied: requested access to the resource is denied"
+### Error: "denied: requested access to the resource is denied"
 
 **Causa:** No hiciste login o usaste el usuario incorrecto.
 
@@ -242,7 +242,7 @@ docker login
 
 ---
 
-### ❌ Error: "no basic auth credentials"
+### Error: "no basic auth credentials"
 
 **Causa:** Docker no tiene credenciales.
 
@@ -253,7 +253,7 @@ docker login
 
 ---
 
-### ❌ Error al construir: "Cannot connect to Docker daemon"
+### Error al construir: "Cannot connect to Docker daemon"
 
 **Causa:** Docker Desktop no está corriendo.
 
@@ -264,7 +264,7 @@ docker login
 
 ---
 
-### ⏳ Las imágenes tardan mucho en subir
+### Las imágenes tardan mucho en subir
 
 **Normal si tienes internet lento.**
 
@@ -278,7 +278,7 @@ Con internet normal: 5-10 minutos.
 
 ---
 
-### 🔄 Actualizar las imágenes (si hiciste cambios)
+### Actualizar las imágenes (si hiciste cambios)
 
 Si modificaste el código y quieres actualizar las imágenes:
 
@@ -291,7 +291,7 @@ Esto reconstruye y sube todo de nuevo.
 
 ---
 
-## 📋 Checklist Final
+## Checklist Final
 
 ### Para quien sube las imágenes:
 - [ ] Cuenta de Docker Hub creada
@@ -309,7 +309,7 @@ Esto reconstruye y sube todo de nuevo.
 
 ---
 
-## 🎓 Resumen
+## Resumen
 
 **Para construir (1 vez):**
 ```bash
@@ -327,7 +327,7 @@ cd proyecto-final-distribuidos/k8s
 
 ---
 
-## 🔗 Enlaces Útiles
+## Enlaces Útiles
 
 - Docker Hub del proyecto: https://hub.docker.com/u/jemartinez02
 - Documentación de Kubernetes: `k8s/README.md`

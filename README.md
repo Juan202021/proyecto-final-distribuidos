@@ -1,10 +1,10 @@
-# 🔢 Sistema Distribuido de Generación de Números Primos
+# Sistema Distribuido de Generación de Números Primos
 
 Proyecto final para la clase de **Sistemas Distribuidos** - Una aplicación que permite solicitar números primos grandes y distribuye el cálculo entre múltiples workers usando Kubernetes.
 
 ---
 
-## 📋 Descripción del Proyecto
+## Descripción del Proyecto
 
 Este sistema demuestra conceptos clave de sistemas distribuidos:
 
@@ -27,7 +27,7 @@ El sistema:
 
 ---
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
@@ -66,7 +66,7 @@ El sistema:
 
 ---
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 ### Opción 1: Docker Compose (Desarrollo Local)
 
@@ -103,7 +103,7 @@ Ver [k8s/README.md](k8s/README.md) para instrucciones detalladas.
 
 ---
 
-## 📡 API Reference
+## API Reference
 
 ### 1. Crear Solicitud
 
@@ -174,7 +174,7 @@ Ver [k8s/README.md](k8s/README.md) para instrucciones detalladas.
 
 ---
 
-## 🧪 Pruebas Completas
+## Pruebas Completas
 
 ### Ejemplo end-to-end
 
@@ -199,7 +199,7 @@ curl -X POST http://localhost:30003/resultado \
 
 ---
 
-## 🔧 Desarrollo
+## Desarrollo
 
 ### Estructura del Proyecto
 
@@ -228,7 +228,7 @@ Ver: [src/services/worker/worker.py](src/services/worker/worker.py)
 
 ---
 
-## 📦 Docker Hub
+## Docker Hub
 
 Las imágenes están disponibles públicamente en Docker Hub:
 
@@ -241,7 +241,7 @@ Ver [k8s/DOCKER_HUB.md](k8s/DOCKER_HUB.md) para instrucciones de cómo construir
 
 ---
 
-## 📚 Documentación
+## Documentación
 
 - **[k8s/README.md](k8s/README.md)** - Guía completa de Kubernetes
 - **[k8s/DOCKER_HUB.md](k8s/DOCKER_HUB.md)** - Guía de Docker Hub
@@ -251,28 +251,28 @@ Ver [k8s/DOCKER_HUB.md](k8s/DOCKER_HUB.md) para instrucciones de cómo construir
 
 ## 🎓 Conceptos de Sistemas Distribuidos Demostrados
 
-### ✅ Escalabilidad Horizontal
+### Escalabilidad Horizontal
 - Workers pueden escalarse independientemente: `kubectl scale deployment worker --replicas=10`
 
-### ✅ Tolerancia a Fallos
+### Tolerancia a Fallos
 - Múltiples réplicas de cada microservicio
 - Si un worker falla, otros continúan procesando
 
-### ✅ Desacoplamiento
+### Desacoplamiento
 - Microservicios se comunican mediante cola (no sincrónicamente)
 - Cambios en un servicio no afectan a otros
 
-### ✅ Distribución de Carga
+### Distribución de Carga
 - Redis BLPOP distribuye tareas automáticamente entre workers disponibles
 - Sin coordinación centralizada (cada worker es independiente)
 
-### ✅ Idempotencia
+### Idempotencia
 - Constraint UNIQUE en base de datos previene duplicados
 - Workers pueden reintentar sin efectos secundarios
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 - **Backend**: Node.js, Express, Python
 - **Base de Datos**: PostgreSQL 15
@@ -283,24 +283,24 @@ Ver [k8s/DOCKER_HUB.md](k8s/DOCKER_HUB.md) para instrucciones de cómo construir
 
 ---
 
-## 👥 Equipo
+## Equipo
 
 - **Desarrollador 1**: Joshua Martinez (@jemartinez02)
-- **Desarrollador 2**: [Nombre del compañero]
+- **Desarrollador 2**: Juan Aristizabal
 
 **Curso**: Sistemas Distribuidos  
-**Institución**: [Tu Universidad]  
+**Institución**: Universidad de los Llanos 
 **Año**: 2025
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
 
 ---
 
-## 🙏 Agradecimientos
+## Agradecimientos
 
 - Profesor(a) de Sistemas Distribuidos por la guía y enseñanzas
 - Documentación de Kubernetes y Docker

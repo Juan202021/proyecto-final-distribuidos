@@ -2,7 +2,7 @@
 
 Este directorio contiene los manifiestos de Kubernetes para desplegar el sistema completo.
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -34,7 +34,7 @@ Este directorio contiene los manifiestos de Kubernetes para desplegar el sistema
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 📁 Archivos
+## Archivos
 
 - `00-namespace.yaml` - Namespace dedicado `primos-system`
 - `01-configmap.yaml` - Variables de entorno y script de inicialización de DB
@@ -46,7 +46,7 @@ Este directorio contiene los manifiestos de Kubernetes para desplegar el sistema
 - `07-worker.yaml` - Workers que procesan los números primos (5 réplicas)
 - `deploy.sh` - Script automatizado de despliegue
 
-## 🚀 Despliegue en Killercoda
+## Despliegue en Killercoda
 
 ### Paso 1: Clonar el repositorio
 
@@ -82,12 +82,12 @@ chmod +x deploy.sh
 ```
 
 El script automáticamente:
-1. ✅ Crea el namespace y ConfigMaps
-2. ✅ Despliega PostgreSQL y espera a que esté listo
-3. ✅ Despliega Redis y espera a que esté listo
-4. ✅ Despliega los 3 microservicios
-5. ✅ Despliega los 5 workers
-6. ✅ Muestra el estado final
+1.  Crea el namespace y ConfigMaps
+2.  Despliega PostgreSQL y espera a que esté listo
+3.  Despliega Redis y espera a que esté listo
+4.  Despliega los 3 microservicios
+5.  Despliega los 5 workers
+6.  Muestra el estado final
 
 ### Paso 4: Verificar el despliegue
 
@@ -102,7 +102,7 @@ kubectl get services -n primos-system
 kubectl logs -n primos-system -l app=worker --tail=50
 ```
 
-## 🧪 Probar el Sistema
+## Probar el Sistema
 
 ### 1. Crear una solicitud
 
@@ -153,7 +153,7 @@ curl -X POST http://localhost:30003/resultado \
 }
 ```
 
-## 📊 Monitoreo
+## Monitoreo
 
 ### Ver logs de workers en tiempo real
 
@@ -164,11 +164,11 @@ kubectl logs -n primos-system -l app=worker -f
 Deberías ver cómo los diferentes workers procesan las tareas:
 
 ```
-worker-deployment-xxx | 📥 Nueva solicitud recibida:
+worker-deployment-xxx |    Nueva solicitud recibida:
 worker-deployment-xxx |    ID: abc-123
 worker-deployment-xxx |    Cantidad: 20 números primos
 worker-deployment-xxx |    Dígitos: 10
-worker-deployment-yyy | 📥 Nueva solicitud recibida:
+worker-deployment-yyy |    Nueva solicitud recibida:
 worker-deployment-yyy |    ID: def-456
 ...
 ```
@@ -211,7 +211,7 @@ O manualmente:
 kubectl delete namespace primos-system
 ```
 
-## 📝 Notas Importantes
+## Notas Importantes
 
 - **NodePorts**: Los servicios están expuestos en puertos 30001-30003
 - **ImagePullPolicy**: Configurado como `Never` para usar imágenes locales en Killercoda
@@ -219,12 +219,12 @@ kubectl delete namespace primos-system
 - **Workers**: 5 réplicas por defecto para demostrar distribución de carga
 - **Persistencia**: No hay volúmenes persistentes (solo para pruebas/demo)
 
-## 🎓 Para el Proyecto Final
+## Para el Proyecto Final
 
 Este despliegue demuestra:
-- ✅ Arquitectura de microservicios
-- ✅ Distribución de carga con múltiples workers
-- ✅ Comunicación asíncrona mediante cola (Redis)
-- ✅ Orquestación con Kubernetes
-- ✅ Escalabilidad horizontal
-- ✅ Separación de responsabilidades
+-  Arquitectura de microservicios
+-  Distribución de carga con múltiples workers
+-  Comunicación asíncrona mediante cola (Redis)
+-  Orquestación con Kubernetes
+-  Escalabilidad horizontal
+-  Separación de responsabilidades
