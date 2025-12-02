@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservicio3-deployment
+  namespace: primos-system
+  labels:
+    app: microservicio3
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: microservicio3
+  template:
+    metadata:
+      labels:
+        app: microservicio3
+    spec:
+      containers:
+      - name: microservicio3
+        image: jemartinez02/microservicio3:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3003
+        envFrom:
+        - configMapRef:
+            name: primos-config
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservicio3-service
+  namespace: primos-system
+spec:
+  selector:
+    app: microservicio3
+  ports:
+  - protocol: TCP
+    port: 3003
+    targetPort: 3003
+    nodePort: 30003
+  type: NodePort

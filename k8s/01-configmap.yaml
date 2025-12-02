@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: primos-config
+  namespace: primos-system
+data:
+  # PostgreSQL configuration
+  DB_HOST: "postgres-service"
+  DB_PORT: "5432"
+  DB_USER: "usuario"
+  DB_PASS: "password"
+  DB_NAME: "primos_db"
+  
+  # Redis configuration
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-script
+  namespace: primos-system
+data:
+  init.sql: |
+    CREATE TABLE IF NOT EXISTS solicitudes (
+        id VARCHAR(50) PRIMARY KEY,
+        cantidad INT NOT NULL,
+        num_digitos INT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS resultados (
+        id SERIAL PRIMARY KEY,
+        solicitud_id VARCHAR(50) REFERENCES solicitudes(id),
+        numero BIGINT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+        CONSTRAINT unique_prime_per_request UNIQUE (solicitud_id, numero)
+    );
+
+    CREATE INDEX idx_solicitud ON resultados(solicitud_id);

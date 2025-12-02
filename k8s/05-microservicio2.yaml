@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservicio2-deployment
+  namespace: primos-system
+  labels:
+    app: microservicio2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: microservicio2
+  template:
+    metadata:
+      labels:
+        app: microservicio2
+    spec:
+      containers:
+      - name: microservicio2
+        image: jemartinez02/microservicio2:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3002
+        envFrom:
+        - configMapRef:
+            name: primos-config
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservicio2-service
+  namespace: primos-system
+spec:
+  selector:
+    app: microservicio2
+  ports:
+  - protocol: TCP
+    port: 3002
+    targetPort: 3002
+    nodePort: 30002
+  type: NodePort

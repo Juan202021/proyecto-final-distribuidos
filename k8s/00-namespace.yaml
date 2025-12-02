@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: primos-system
+  labels:
+    app: primos-distribuidos
+    proyecto: sistemas-distribuidos
