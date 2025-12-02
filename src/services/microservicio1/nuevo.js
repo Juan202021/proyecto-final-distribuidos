@@ -1,8 +1,7 @@
 import express from "express";
 import { v4 as uuidv4 } from "uuid";
-import { nuevaSolicitud, mostrarResultados, mostrarSolicitudes } from "../libs/db.js";
-import { enviarTrabajo } from "../libs/cola.js";
-import e from "express";
+import { nuevaSolicitud } from "../../libs/db.js";
+import { enviarTrabajo } from "../../libs/cola.js";
 
 const app = express();
 const port = 3001;
@@ -11,16 +10,30 @@ const port = 3001;
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Microservicio 1!");
+  res.send("Microservicio 1: Crear nuevas solicitudes");
 });
 
 app.post("/nuevo", async (req, res) => {
   try {
     const { cantidad, digitos } = req.body;
 
+    // Validar campos requeridos
     if (!cantidad || !digitos) {
       return res.status(400).json({
         error: "Los campos cantidad y digitos son obligatorios.",
+      });
+    }
+
+    // Validar límites razonables
+    if (cantidad > 1000 || cantidad < 1) {
+      return res.status(400).json({
+        error: "La cantidad debe estar entre 1 y 1000.",
+      });
+    }
+
+    if (digitos > 20 || digitos < 1) {
+      return res.status(400).json({
+        error: "Los dígitos deben estar entre 1 y 20.",
       });
     }
 
@@ -30,20 +43,17 @@ app.post("/nuevo", async (req, res) => {
     // Insertar en la BD
     await nuevaSolicitud(idSolicitud, cantidad, digitos);
 
-    // 3. Enviar a la cola
-    const idTrabajo = await enviarTrabajo({
+    // Enviar a la cola de Redis
+    await enviarTrabajo({
       solicitudId: idSolicitud,
       cantidad,
       digitos
     });
 
-    const resultados = await mostrarResultados();
-    const solicitudes = await mostrarSolicitudes();
-
     return res.json({
+      success: true,
       idSolicitud: idSolicitud,
-      resultados: resultados,
-      solicitudes: solicitudes
+      mensaje: `Solicitud creada: ${cantidad} números primos de ${digitos} dígitos`
     });
   } catch (error) {
     console.error("Error al procesar la solicitud:", error);

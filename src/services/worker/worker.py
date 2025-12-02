@@ -14,10 +14,20 @@ DB_USER = os.getenv('DB_USER', 'usuario')
 DB_PASS = os.getenv('DB_PASS', 'password')
 
 # --- CONEXIONES ---
-print(f"Iniciando Worker. Conectando a Redis en {REDIS_HOST}...")
+print(f"🚀 Iniciando Worker...")
+print(f"📡 Conectando a Redis en {REDIS_HOST}:6379")
+print(f"🗄️  Conectando a PostgreSQL en {DB_HOST}")
 
 # Conexión a Redis
-r_queue = redis.Redis(host=REDIS_HOST, port=6379, db=0)
+r_queue = redis.Redis(host=REDIS_HOST, port=6379, db=0, decode_responses=True)
+
+# Probar conexión
+try:
+    r_queue.ping()
+    print("✓ Conexión a Redis exitosa")
+except Exception as e:
+    print(f"❌ Error conectando a Redis: {e}")
+    exit(1)
 
 # Conexión a Base de Datos
 def get_db_connection():
@@ -77,53 +87,77 @@ def generar_primo(digitos):
 
 # --- PROCESAMIENTO ---
 def procesar_solicitud():
-    print("Worker listo. Esperando tareas en la cola 'solicitudes'...")
+    print("\n⏳ Worker listo. Esperando tareas en la cola 'solicitudes'...\n")
     
     while True:
-        # 1. BLPOP bloquea el código hasta que llega algo a la lista 'solicitudes'
-        # Devuelve una tupla (nombre_cola, datos)
-        tarea = r_queue.blpop('solicitudes') 
-        
-        datos_json = tarea[1].decode('utf-8')
-        solicitud = json.loads(datos_json)
-        
-        req_id = solicitud['id']
-        cantidad = solicitud['cantidad']
-        digitos = solicitud['num_digitos']
-        
-        print(f"--> Procesando solicitud {req_id}: {cantidad} primos de {digitos} dígitos.")
-        
-        generados = 0
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        while generados < cantidad:
-            # 2. Generar el número
-            nuevo_primo = generar_primo(digitos)
+        try:
+            # 1. BLPOP bloquea el código hasta que llega algo a la lista 'solicitudes'
+            # Devuelve una tupla (nombre_cola, datos)
+            tarea = r_queue.blpop('solicitudes')
             
-            try:
-                # 3. Intentar guardar en BD
-                query = "INSERT INTO resultados (solicitud_id, numero) VALUES (%s, %s)"
-                cursor.execute(query, (req_id, nuevo_primo))
-                conn.commit()
-                generados += 1
+            # Si tarea es None, continuar esperando
+            if not tarea:
+                continue
+            
+            datos_json = tarea[1]  # Ya viene decodificado por decode_responses=True
+            solicitud = json.loads(datos_json)
+            
+            req_id = solicitud['id']
+            cantidad = solicitud['cantidad']
+            digitos = solicitud['num_digitos']
+            
+            print(f"📥 Nueva solicitud recibida:")
+            print(f"   ID: {req_id}")
+            print(f"   Cantidad: {cantidad} números primos")
+            print(f"   Dígitos: {digitos}")
+            print()
+            
+            # Verificar que la solicitud existe en la BD
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            
+            cursor.execute("SELECT id FROM solicitudes WHERE id = %s", (req_id,))
+            if not cursor.fetchone():
+                print(f"⚠️  Solicitud {req_id} no existe en BD. Descartando trabajo.")
+                cursor.close()
+                conn.close()
+                continue
+            
+            generados = 0
+            
+            while generados < cantidad:
+                # 2. Generar el número
+                nuevo_primo = generar_primo(digitos)
                 
-                # Opcional: Imprimir progreso cada tanto
-                print(f"    [{generados}/{cantidad}] Encontrado: {nuevo_primo}")
-                
-            except psycopg2.errors.UniqueViolation:
-                # 4. Manejo de duplicados (Requisito del proyecto)
-                # Si el número ya existe para esta ID, Postgres lanza error.
-                # Hacemos rollback y NO incrementamos el contador 'generados'.
-                conn.rollback()
-                print(f"    [!] El número {nuevo_primo} ya existía. Buscando otro...")
-            except Exception as e:
-                conn.rollback()
-                print(f"Error en BD: {e}")
-                
-        cursor.close()
-        conn.close()
-        print(f"<-- Solicitud {req_id} completada.")
+                try:
+                    # 3. Intentar guardar en BD
+                    query = "INSERT INTO resultados (solicitud_id, numero) VALUES (%s, %s)"
+                    cursor.execute(query, (req_id, nuevo_primo))
+                    conn.commit()
+                    generados += 1
+                    
+                    # Imprimir progreso
+                    print(f"   ✓ [{generados}/{cantidad}] {nuevo_primo}")
+                    
+                except psycopg2.errors.UniqueViolation:
+                    # 4. Manejo de duplicados (Requisito del proyecto)
+                    # Si el número ya existe para esta ID, Postgres lanza error.
+                    # Hacemos rollback y NO incrementamos el contador 'generados'.
+                    conn.rollback()
+                    print(f"   ⚠️  Duplicado detectado: {nuevo_primo}. Generando otro...")
+                except Exception as e:
+                    conn.rollback()
+                    print(f"❌ Error en BD: {e}")
+                    
+            cursor.close()
+            conn.close()
+            print(f"\n✅ Solicitud {req_id} completada exitosamente!\n")
+            print("⏳ Esperando siguiente tarea...\n")
+            
+        except Exception as e:
+            print(f"❌ Error procesando tarea: {e}")
+            import traceback
+            traceback.print_exc()
 
 if __name__ == "__main__":
     procesar_solicitud()

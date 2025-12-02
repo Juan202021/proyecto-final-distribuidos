@@ -1,9 +1,9 @@
 {
   "type": "module",
   "dependencies": {
-    "bullmq": "^5.65.1",
     "express": "^5.1.0",
     "pg": "^8.16.3",
+    "redis": "^4.7.0",
     "uuid": "^13.0.0"
   }
 }

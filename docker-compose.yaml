@@ -19,7 +19,7 @@ services:
   micro1:
     build:
       context: .
-      dockerfile: src/services/microservicio1/Dockerfile         # opcional si se llama Dockerfile
+      dockerfile: src/services/microservicio1/Dockerfile
     container_name: microservicio1
     depends_on:
       - db
@@ -37,8 +37,8 @@ services:
 
   micro2:
     build:
-      context: .     
-      dockerfile: src/services/microservicio2/Dockerfile                    # opcional si se llama Dockerfile
+      context: .
+      dockerfile: src/services/microservicio2/Dockerfile
     container_name: microservicio2
     depends_on:
       - db
@@ -56,8 +56,8 @@ services:
 
   micro3:
     build:
-      context: .       # carpeta donde está tu Dockerfile
-      dockerfile: src/services/microservicio3/Dockerfile                    # opcional si se llama Dockerfile
+      context: .
+      dockerfile: src/services/microservicio3/Dockerfile
     container_name: microservicio3
     depends_on:
       - db
@@ -72,3 +72,20 @@ services:
       REDIS_PORT: 6379
     ports:
       - "3003:3003"
+
+  worker:
+    build:
+      context: .
+      dockerfile: src/services/worker/Dockerfile
+    container_name: worker1
+    depends_on:
+      - db
+      - cola
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: usuario
+      DB_PASS: password
+      DB_NAME: primos_db
+      REDIS_HOST: cola
+      REDIS_PORT: 6379
