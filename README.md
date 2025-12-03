@@ -67,24 +67,9 @@ El sistema:
 ---
 
 ## Inicio Rápido
-
-### Opción 1: Docker Compose (Desarrollo Local)
-
-```bash
-# Clonar el repositorio
-git clone https://github.com/Juan202021/proyecto-final-distribuidos
-cd proyecto-final-distribuidos
-
-# Levantar todos los servicios
-docker-compose up --build
-
-# Probar
-curl -X POST http://localhost:3001/nuevo \
-  -H "Content-Type: application/json" \
-  -d '{"cantidad": 10, "digitos": 8}'
 ```
 
-### Opción 2: Kubernetes (Producción / Killercoda)
+### Kubernetes (Producción / Killercoda)
 
 ```bash
 # Clonar el repositorio
