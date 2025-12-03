@@ -67,7 +67,6 @@ El sistema:
 ---
 
 ## Inicio Rápido
-```
 
 ### Kubernetes (Producción / Killercoda)
 
